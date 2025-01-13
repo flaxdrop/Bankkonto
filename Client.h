@@ -7,9 +7,10 @@
 #include <mutex>
 #include <random>
 
-namespace Client {
-void Client(Bank& bank_ref);
-}
+class Client {
+    public:
+ static void client(Bank& bank_ref);
+};
 
 
 #endif

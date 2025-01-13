@@ -4,14 +4,14 @@
 
 void Bank::createAccount(int accountNumber, int balance)
 {
-    std::lock_guard<std::mutex> lock_accounts(allAccountsMutex);
+    std::lock_guard<std::mutex> lock(allAccountsMutex);
     if (m_accounts.count(accountNumber) != 0)
     {
         // error message: account already exists
         return;
     }
 
-    m_accounts.emplace(accountNumber, BankAccount(accountNumber));
+    //m_accounts.emplace(accountNumber, BankAccount(accountNumber));
     // lockguard allAccountsMutex
     // check if account already exists
 }

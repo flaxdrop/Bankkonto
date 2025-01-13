@@ -1,6 +1,6 @@
 #include "Client.h"
 
-void Client::Client(Bank& bank_ref)
+void Client::client(Bank& bank_ref)
 {
 
     // lock the bank account map

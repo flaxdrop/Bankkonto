@@ -5,19 +5,20 @@
 #include <mutex>
 #include <map>
 
-class BankAccount {
+class BankAccount
+{
 private:
     int m_balance;
     int m_accountNumber;
     mutable std::mutex m_accountMutex;
+
 public:
-BankAccount(int accountnumber);
+    BankAccount(int accountnumber);
 
     int getBalance() const;
     void deposit(int amount);
     void withdraw(int amount);
     int getAccountNumber();
-
 };
 
 #endif

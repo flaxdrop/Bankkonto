@@ -12,7 +12,7 @@ class Bank{
     private:
         std::map<int, BankAccount> m_accounts;
     public:
-        Bank();
+        Bank(){};
         std::mutex allAccountsMutex;
         void createAccount(int accountNumber, int balance);
         bool accountExists(int accountNumber);

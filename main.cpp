@@ -19,16 +19,16 @@ int main()
     // }
 
     
-    std::thread user1(Client::Client, std::ref(bank));
-    std::thread user2(Client::Client, std::ref(bank));
-    std::thread user3(Client::Client, std::ref(bank));
-    std::thread user4(Client::Client, std::ref(bank));
-    std::thread user5(Client::Client, std::ref(bank));
-    std::thread user6(Client::Client, std::ref(bank));
-    std::thread user7(Client::Client, std::ref(bank));
-    std::thread user8(Client::Client, std::ref(bank));
-    std::thread user9(Client::Client, std::ref(bank));
-    std::thread user10(Client::Client, std::ref(bank));
+    std::thread user1(Client::client, std::ref(bank));
+    std::thread user2(Client::client, std::ref(bank));
+    std::thread user3(Client::client, std::ref(bank));
+    std::thread user4(Client::client, std::ref(bank));
+    std::thread user5(Client::client, std::ref(bank));
+    std::thread user6(Client::client, std::ref(bank));
+    std::thread user7(Client::client, std::ref(bank));
+    std::thread user8(Client::client, std::ref(bank));
+    std::thread user9(Client::client, std::ref(bank));
+    std::thread user10(Client::client, std::ref(bank));
 
     user1.join();
     user2.join();
