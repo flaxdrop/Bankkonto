@@ -1,4 +1,6 @@
 #include "Client.h"
+#include <sstream>
+
 
 void Client::client(Bank& bank_ref)
 {
@@ -14,8 +16,8 @@ void Client::client(Bank& bank_ref)
     // Check if transcation possible
     // perform transaction
     // free account
-
-    BankAccount *account_ref;
+    std::ostringstream stream;
+    std::shared_ptr<BankAccount> account_ref;
     {
         std::lock_guard<std::mutex> lock(bank_ref.allAccountsMutex);
         // populate vector with all valid accounts
@@ -24,17 +26,41 @@ void Client::client(Bank& bank_ref)
         int numOfAccounts{ static_cast<int>(existingAccounts.size())};
         // get random index
         int randomAccount{Random::get_random(0, numOfAccounts - 1)};
+        int accountNumber = existingAccounts[randomAccount];
 
         // test printing
-        std::cout << "Random account: " << existingAccounts.at(randomAccount) << "\n\n";
-
-        // account_ref = bank_ref.getAccount(randomAccount);
-        // if (account_ref == nullptr)
-        //     return;
+        //std::cout << "Random account: " << existingAccounts.at(randomAccount) << "\n\n";
+        
+        account_ref = bank_ref.getAccount(accountNumber);
+        if (account_ref == nullptr)
+        {
+            stream << "Account does not exist" << std::endl;
+            std::cout << stream.str();
+            return;
+        }
     }
-
     {
-        std::cout << "Client doing transaction!" << std::endl;
+        int randomValue{Random::get_random(0, 1)};
+        if(randomValue == 1)
+        {
+            int randomAmount{Random::get_random(1, 100)};
+            account_ref->deposit(randomAmount);
+            stream << "Client deposited " << randomAmount << " kr into account " << account_ref->getAccountNumber() << "." << std::endl;
+        }
+        else 
+        {
+            int randomAmount{Random::get_random(1, 100)};
+            if(account_ref->getBalance() >= randomAmount)
+            {
+                account_ref->withdraw(randomAmount);
+                stream << "Client withdrew " << randomAmount << " kr from account " << account_ref->getAccountNumber() << "." << std::endl;
+            }
+            else
+            {
+                stream << "Insufficient funds" << std::endl;
+            }
+        }
     }
+    std::cout << stream.str();
     return;
 }

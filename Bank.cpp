@@ -10,8 +10,9 @@ void Bank::createAccount(int accountNumber, int balance)
         // error message: account already exists
         return;
     }
+    m_accounts.emplace(accountNumber, std::make_shared<BankAccount>(accountNumber,balance));
      //BankAccount* newAccount = new BankAccount(accountNumber);
-    m_accounts.emplace(accountNumber, accountNumber);
+    //m_accounts.emplace(accountNumber, accountNumber);
     // lockguard allAccountsMutex
     // check if account already exists
 }
@@ -26,19 +27,17 @@ void Bank::printBalance() const
     std::cout << "Saldo" << std::endl;
     for (const auto &account : m_accounts)
     {
-        std::cout << "kontonummer: " << account.first << " saldo: " << account.second.getBalance() << std::endl;
+        std::cout << "kontonummer: " << account.first << " saldo: " << account.second->getBalance() << std::endl;
     }
 }
 
-BankAccount *Bank::getAccount(int accountNumber)
+std::shared_ptr<BankAccount> Bank::getAccount(int accountNumber)
 {
-    if (auto search = m_accounts.find(accountNumber); search != m_accounts.end())
-        return &search->second;
-    else
-    {
-        std::cout << "Account does not exist" << std::endl;
-        return nullptr;
-    }
+    auto search = m_accounts.find(accountNumber);
+    if (search != m_accounts.end()) {
+        return search->second;  
+    } 
+    return nullptr;  
 }
 
 std::vector<int> Bank::getAccountNumbers()
