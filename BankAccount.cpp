@@ -1,8 +1,7 @@
 #include "BankAccount.h"
 
-
 BankAccount::BankAccount(int accountnumber)
-    : m_accountNumber ( accountnumber ), m_balance ( 0 ) {}
+    : m_accountNumber(accountnumber), m_balance(200) {}
 
 int BankAccount::getBalance() const
 {
@@ -18,18 +17,11 @@ void BankAccount::deposit(int amount)
 
 void BankAccount::withdraw(int amount)
 {
-    //Vi kanske ska göra denna balancecheck innan withdraw körs?
+    // Vi kanske ska göra denna balancecheck innan withdraw körs?
 
     std::lock_guard<std::mutex> lock(m_accountMutex);
-    if(m_balance >= amount)
-    {
-        m_balance -= amount;
-        std::cout << amount << "withdrawn from account: " << m_accountNumber << std::endl; 
-    }
-    else
-    {
-        std::cout << "Insufficient funds" << std::endl;
-    }
+
+    m_balance -= amount;
 }
 int BankAccount::getAccountNumber()
 {

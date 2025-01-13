@@ -6,18 +6,19 @@
 #include <mutex>
 #include <map>
 #include <vector>
+#include <memory>
 
 
 class Bank{
     private:
-        std::map<int, BankAccount> m_accounts;
+        std::map<int, std::shared_ptr<BankAccount>> m_accounts;
     public:
         Bank(){};
         std::mutex allAccountsMutex;
         void createAccount(int accountNumber, int balance);
         bool accountExists(int accountNumber);
         void printBalance()const;
-        BankAccount* getAccount(int accountNumber);
+        std::shared_ptr<BankAccount> getAccount(int accountNumber);
         // int getBalance(int accountNumber) const;
         std::vector<int> getAccountNumbers();
 };
