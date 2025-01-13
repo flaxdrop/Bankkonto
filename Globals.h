@@ -1,0 +1,7 @@
+#ifndef CHAS_BOILER1_BANKSYSTEM_GLOBALS
+#define CHAS_BOILER1_BANKSYSTEM_GLOBALS
+#include <mutex>
+
+
+
+#endif
