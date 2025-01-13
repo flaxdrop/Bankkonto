@@ -11,7 +11,7 @@ void Bank::createAccount(int accountNumber, int balance)
         return;
     }
      //BankAccount* newAccount = new BankAccount(accountNumber);
-    // m_accounts.insert({accountNumber,0});
+    m_accounts.emplace(accountNumber, accountNumber);
     // lockguard allAccountsMutex
     // check if account already exists
 }

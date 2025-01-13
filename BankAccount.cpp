@@ -1,8 +1,8 @@
 #include "BankAccount.h"
 
 
-BankAccount::BankAccount(int accountnumber)
-    : m_accountNumber ( accountnumber ), m_balance ( 0 ) {}
+BankAccount::BankAccount(int accountnumber, int balance)
+    : m_accountNumber ( accountnumber ), m_balance ( balance ) {}
 
 int BankAccount::getBalance() const
 {

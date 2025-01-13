@@ -18,17 +18,21 @@ void Client::client(Bank& bank_ref)
     BankAccount *account_ref;
     {
         std::lock_guard<std::mutex> lock(bank_ref.allAccountsMutex);
-        
+        // populate vector with all valid accounts
         std::vector<int> existingAccounts{bank_ref.getAccountNumbers()};
-        size_t numOfAccounts{existingAccounts.size()};
+        // get size of vector
+        int numOfAccounts{ static_cast<int>(existingAccounts.size())};
+        // get random index
         int randomAccount{Random::get_random(0, numOfAccounts - 1)};
 
-        std::cout << randomAccount << "\n";
+        // test printing
+        std::cout << "Random account: " << existingAccounts.at(randomAccount) << "\n\n";
 
-        account_ref = bank_ref.getAccount(randomAccount);
-        if (account_ref == nullptr)
-            return;
+        // account_ref = bank_ref.getAccount(randomAccount);
+        // if (account_ref == nullptr)
+        //     return;
     }
+
     {
         std::cout << "Client doing transaction!" << std::endl;
     }
