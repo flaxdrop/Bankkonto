@@ -12,12 +12,6 @@ int main()
     {
         bank.createAccount(i * 1000, 1000);
     }
-
-    // for (int i = 0; 0 < 10; i++)
-    // {
-    //     Client(bank);
-    // }
-
     
     std::thread user1(Client::client, std::ref(bank));
     std::thread user2(Client::client, std::ref(bank));
