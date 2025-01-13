@@ -10,8 +10,8 @@ void Bank::createAccount(int accountNumber, int balance)
         // error message: account already exists
         return;
     }
-
-    //m_accounts.emplace(accountNumber, BankAccount(accountNumber));
+     //BankAccount* newAccount = new BankAccount(accountNumber);
+    // m_accounts.insert({accountNumber,0});
     // lockguard allAccountsMutex
     // check if account already exists
 }
