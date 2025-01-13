@@ -7,13 +7,13 @@
 
 class BankAccount {
 private:
-    int balance;
-    int accountNumber;
-    std::mutex account_mutex;
+    int m_balance;
+    int m_accountNumber;
+    mutable std::mutex m_accountMutex;
 public:
-BankAccount();
+BankAccount(int accountnumber);
 
-    int getBalance();
+    int getBalance() const;
     void deposit(int amount);
     void withdraw(int amount);
     int getAccountNumber();

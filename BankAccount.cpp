@@ -1,30 +1,30 @@
 #include "BankAccount.h"
 
 
-BankAccount::BankAccount()
-{
+BankAccount::BankAccount(int accountnumber)
+    : m_accountNumber ( accountnumber ), m_balance ( 0 ) {}
 
-}
-
-int BankAccount::getBalance()
+int BankAccount::getBalance() const
 {
-    return balance;
+    std::lock_guard<std::mutex> lock(m_accountMutex);
+    return m_balance;
 }
 
 void BankAccount::deposit(int amount)
 {
-    balance += amount;
+    std::lock_guard<std::mutex> lock(m_accountMutex);
+    m_balance += amount;
 }
 
 void BankAccount::withdraw(int amount)
 {
     //Vi kanske ska göra denna balancecheck innan withdraw körs?
 
-    std::lock_guard<std::mutex> lock(account_mutex);
-    if(balance >= amount)
+    std::lock_guard<std::mutex> lock(m_accountMutex);
+    if(m_balance >= amount)
     {
-        balance -= amount;
-        std::cout << amount << "withdrawn from account: " << accountNumber << std::endl; 
+        m_balance -= amount;
+        std::cout << amount << "withdrawn from account: " << m_accountNumber << std::endl; 
     }
     else
     {
@@ -33,5 +33,5 @@ void BankAccount::withdraw(int amount)
 }
 int BankAccount::getAccountNumber()
 {
-    return accountNumber;
+    return m_accountNumber;
 }

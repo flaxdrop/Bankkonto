@@ -1,9 +1,8 @@
 #include "Client.h"
 
-void Client()
+void Client::Client(Bank& bank_ref)
 {
 
-    // Create thread
     // lock the bank account map
     // get random account number
     // get account reference
@@ -15,5 +14,23 @@ void Client()
     // Check if transcation possible
     // perform transaction
     // free account
-    // exit thread
+
+    BankAccount *account_ref;
+    {
+        std::lock_guard<std::mutex> lock(bank_ref.allAccountsMutex);
+        
+        std::vector<int> existingAccounts{bank_ref.getAccountNumbers()};
+        size_t numOfAccounts{existingAccounts.size()};
+        int randomAccount{Random::get_random(0, numOfAccounts - 1)};
+
+        std::cout << randomAccount << "\n";
+
+        account_ref = bank_ref.getAccount(randomAccount);
+        if (account_ref == nullptr)
+            return;
+    }
+    {
+        std::cout << "Client doing transaction!" << std::endl;
+    }
+    return;
 }
