@@ -2,15 +2,17 @@
 #define CHAS_BOILER1_BANKSYSTEM_BANKACCOUNT
 
 #include <iostream>
-#include <mutex>
-#include <map>
+#include <shared_mutex>
+#include <thread>
+#include <chrono>
+#include "Random.h"
 
 class BankAccount
 {
 private:
     int m_balance;
     int m_accountNumber;
-    mutable std::mutex m_accountMutex;
+    mutable std::shared_mutex m_accountMutex;
 public:
     BankAccount(int accountnumber, int balance = 0);
     int getBalance() const;
