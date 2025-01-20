@@ -1,6 +1,5 @@
 #include "Bank.h"
 #include "Client.h"
-#include "Globals.h"
 #include "BankAccount.h"
 #include "Random.h"
 #include <vector>
@@ -28,5 +27,11 @@ int main()
         thread.join();
     }
 
+    std::vector<int> accountNumbers = bank.getAccountNumbers();
+    std::cout << "Account balances: \n";
+    for(int i = 0; i < accountNumbers.size(); i++)
+    {
+        std::cout << "Account " << accountNumbers.at(i) << " : "<< bank.getAccount(accountNumbers.at(i))->getBalance() << " kr. \n";
+    }
     return 0;
 }
