@@ -16,10 +16,10 @@ class Bank{
         Bank(){};
         std::mutex allAccountsMutex;
         void createAccount(int accountNumber, int balance);
+        void deleteAccount(int accountNumber);
         bool accountExists(int accountNumber);
         void printBalance()const;
         std::shared_ptr<BankAccount> getAccount(int accountNumber);
-        // int getBalance(int accountNumber) const;
         std::vector<int> getAccountNumbers();
 };
 

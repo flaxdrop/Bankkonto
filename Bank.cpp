@@ -11,11 +11,27 @@ void Bank::createAccount(int accountNumber, int balance)
         return;
     }
     m_accounts.emplace(accountNumber, std::make_shared<BankAccount>(accountNumber,balance));
-     //BankAccount* newAccount = new BankAccount(accountNumber);
-    //m_accounts.emplace(accountNumber, accountNumber);
-    // lockguard allAccountsMutex
-    // check if account already exists
 }
+
+void Bank::deleteAccount(int accountNumber)
+{
+    if (m_accounts.count(accountNumber) == 0){
+        std::cout << "Error: account does not exist\n";
+         return;
+    }
+    // aquire the account pointer
+    auto account = getAccount(accountNumber);
+    // lock the bank mutex
+    std::lock_guard lock(allAccountsMutex);
+    if (account->getBalance() != 0) {
+        std::cout << "Error: account " << accountNumber << " is not empty\n";
+        return;
+    }
+    // add user prompt? Delete account #accountNumber, Are you sure (Y/n)
+    m_accounts.erase(accountNumber);
+    std::cout << "Account " << accountNumber << " deleted\n";
+}
+
 
 bool Bank::accountExists(int accountNumber)
 {
