@@ -1,6 +1,5 @@
 #include "Bank.h"
 #include "Client.h"
-#include "Globals.h"
 #include "BankAccount.h"
 #include "Random.h"
 
