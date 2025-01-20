@@ -7,33 +7,39 @@ int BankAccount::getBalance() const
 {
     std::shared_lock<std::shared_mutex> lock(m_accountMutex);
 
-    int randomValue{Random::get_random(1, 3)};
-    std::this_thread::sleep_for(std::chrono::seconds(randomValue));
+    int randomValue{Random::get_random(100, 1000)};
+    std::this_thread::sleep_for(std::chrono::milliseconds(randomValue));
     return m_balance;
 }
 
-void BankAccount::deposit(int amount)
+int BankAccount::deposit(int amount)
 {
     std::lock_guard<std::shared_mutex> lock(m_accountMutex);
     
-    int randomValue{Random::get_random(1, 3)};
-    std::this_thread::sleep_for(std::chrono::seconds(randomValue));
-    m_balance += amount;
+    if (amount > 0) {                   
+        int randomValue{Random::get_random(100, 1000)};
+        std::this_thread::sleep_for(std::chrono::milliseconds(randomValue));
+        m_balance += amount;
+        return amount;
+    } else return -1;
 }
 
-void BankAccount::withdraw(int amount)
+int BankAccount::withdraw(int amount)
 {
     std::lock_guard<std::shared_mutex> lock(m_accountMutex);
     
-    int randomValue{Random::get_random(1, 3)};
-    std::this_thread::sleep_for(std::chrono::seconds(randomValue));
-    m_balance -= amount;
+    if (amount > 0 && m_balance - amount >= 0) {      
+        int randomValue{Random::get_random(100, 1000)};
+        std::this_thread::sleep_for(std::chrono::milliseconds(randomValue));
+        m_balance -= amount;
+        return amount;
+    } else return -1;
 }
 int BankAccount::getAccountNumber()
 {
     std::shared_lock<std::shared_mutex> lock(m_accountMutex);
     
-    int randomValue{Random::get_random(1, 3)};
-    std::this_thread::sleep_for(std::chrono::seconds(randomValue));
+    int randomValue{Random::get_random(100, 1000)};
+    std::this_thread::sleep_for(std::chrono::milliseconds(randomValue));
     return m_accountNumber;
 }

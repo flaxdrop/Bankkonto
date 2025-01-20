@@ -7,6 +7,7 @@
 #include <chrono>
 #include "Random.h"
 
+// deposit and withdraw returns amount on success, -1 on failure
 class BankAccount
 {
 private:
@@ -16,8 +17,8 @@ private:
 public:
     BankAccount(int accountnumber, int balance = 0);
     int getBalance() const;
-    void deposit(int amount);
-    void withdraw(int amount);
+    int deposit(int amount);
+    int withdraw(int amount);
     int getAccountNumber();
 };
 
