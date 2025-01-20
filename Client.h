@@ -9,7 +9,11 @@
 
 class Client {
     public:
- static void client(Bank& bank_ref);
+    Client(const std::string& name, Bank& bank_ref);
+ static void client(Bank& bank_ref, const std::string& name);
+ private:
+ std::string name;
+ Bank& bank;
 };
 
 

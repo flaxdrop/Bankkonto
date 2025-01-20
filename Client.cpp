@@ -1,10 +1,12 @@
 #include "Client.h"
 #include <sstream>
 
-
-void Client::client(Bank& bank_ref)
+Client::Client(const std::string& name, Bank& bank_ref) : name(name), bank(bank_ref)
 {
-
+}
+void Client::client(Bank& bank_ref, const std::string& name)
+{
+Client client(name, bank_ref);
     // lock the bank account map
     // get random account number
     // get account reference
@@ -45,7 +47,7 @@ void Client::client(Bank& bank_ref)
         {
             int randomAmount{Random::get_random(1, 100)};
             account_ref->deposit(randomAmount);
-            stream << "Client deposited " << randomAmount << " kr into account " << account_ref->getAccountNumber() << "." << std::endl;
+            stream << client.name << "deposited " << randomAmount << " kr into account " << account_ref->getAccountNumber() << "." << std::endl;
         }
         else 
         {
@@ -53,7 +55,7 @@ void Client::client(Bank& bank_ref)
             if(account_ref->getBalance() >= randomAmount)
             {
                 account_ref->withdraw(randomAmount);
-                stream << "Client withdrew " << randomAmount << " kr from account " << account_ref->getAccountNumber() << "." << std::endl;
+                stream << client.name << "withdrew " << randomAmount << " kr from account " << account_ref->getAccountNumber() << "." << std::endl;
             }
             else
             {
