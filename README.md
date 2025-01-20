@@ -24,11 +24,11 @@ Installation
 
 Klona detta repository:
 
-git clone <repository-url>
+git clone https://github.com/flaxdrop/Bankkonto.git
 
 Navigera till projektmappen:
 
-cd <projektmapp>
+cd (projektmapp)
 
 Kompilera koden (t.ex. med g++):
 
