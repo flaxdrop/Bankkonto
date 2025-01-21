@@ -1,67 +1,52 @@
-README: Simulerat Banksystem
+# README - Simulerat Banksystem
 
-Projektbeskrivning :
+## Projektbeskrivning
 
 Detta projekt simulerar ett grundläggande banksystem som hanterar flera kunder som utför transaktioner samtidigt. Projektet använder multithreading för att simulera samtidiga kunder och synkroniseringstekniker för att säkerställa integriteten hos delade resurser, såsom kontosaldon.
 
-Funktionalitet :
+### Funktionalitet
 
-Insättning: Kunder kan sätta in pengar på sina konton.
+- **Insättning** - Kunder kan sätta in pengar på sina konton.
+- **Uttag** - Kunder kan ta ut pengar, förutsatt att det finns tillräckligt med saldo.
+- **Saldokontroll** - Kunder kan kontrollera saldot på sina konton.
 
-Uttag: Kunder kan ta ut pengar, förutsatt att det finns tillräckligt med saldo.
+### Tekniker och Koncept
 
-Saldokontroll: Kunder kan kontrollera saldot på sina konton.
+- **Multithreading** - Används för att simulera samtidiga kunder som utför transaktioner.
+- **Synkronisering** - Tekniker som mutex används för att säkerställa att inga datakonflikter eller inkonsekvenser uppstår vid samtidiga transaktioner.
+- **Trådsäkerhet** - Designen säkerställer att varje transaktion behandlas korrekt även under hög belastning.
 
-Tekniker och Koncept :
+### Installation
 
-Multithreading: Används för att simulera samtidiga kunder som utför transaktioner.
+Klona detta repository:  
+`git clone https://github.com/flaxdrop/Bankkonto.git`
 
-Synkronisering: Tekniker som mutex används för att säkerställa att inga datakonflikter eller inkonsekvenser uppstår vid samtidiga transaktioner.
+Navigera till projektmappen:  
+`cd [projektmapp]`
 
-Trådsäkerhet: Designen säkerställer att varje transaktion behandlas korrekt även under hög belastning.
+Kompilera koden (t.ex. med g++):  
+`g++ -std=c++20 -pthread Client.cpp Bank.cpp BankAccount.cpp main.cpp -o bank_system`
 
-Installation
+### Användning
 
-Klona detta repository:
-
-git clone https://github.com/flaxdrop/Bankkonto.git
-
-Navigera till projektmappen:
-
-cd (projektmapp)
-
-Kompilera koden (t.ex. med g++):
-
-g++ -pthread Client.cpp Bank.cpp BankAccount.cpp main.cpp -o bank_system
-
-Användning
-
-Kör det kompilerade programmet:
-
-./bank_system
+Kör det kompilerade programmet:  
+`./bank_system`
 
 Programmet simulerar flera kunder som gör transaktioner och visar resultaten i terminalen.
 
-Struktur
+### Struktur
 
-main.cpp: Huvudfilen som innehåller programmets logik.
+- _main.cpp_ - Huvudfilen som innehåller programmets logik.
+- _BankAccount.h_ och _BankAccount.cpp_ - Klasser för att hantera bankkonton.
+- _Client.h_ och _Client.cpp_ - Klasser för att representera kunder och deras handlingar.
+- _Bank.h_ och _Bank.cpp_ - Hanterar transaktioner och synkronisering.
 
-BankAccount.h och BankAccount.cpp: Klasser för att hantera bankkonton.
+### Förbättringar och Vidareutveckling
 
-Client.h och Client.cpp: Klasser för att representera kunder och deras handlingar.
+- **Funktionalitet** - Lägg till funktioner som kontohistorik och överföringar mellan konton.
+- **Prestanda** - Optimera synkroniseringsmekanismer för bättre prestanda vid högre belastning.
+- **Testning** - Implementera enhetstester för att säkerställa korrekt funktionalitet.
 
-Bank.h och Bank.cpp: Hanterar transaktioner och synkronisering.
-
-Globals.h och Globals.cpp 
-
-Förbättringar och Vidareutveckling
-
-Funktionalitet: Lägg till funktioner som kontohistorik och överföringar mellan konton.
-
-Prestanda: Optimera synkroniseringsmekanismer för bättre prestanda vid högre belastning.
-
-Testning: Implementera enhetstester för att säkerställa korrekt funktionalitet.
-
-Författare
+### Författare
 
 John Collinder, Erik Dahl, Viktor Kvick, David Reyes.
