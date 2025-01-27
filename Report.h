@@ -2,6 +2,8 @@
 #define CHAS_BOILER1_BANKSYSTEM_REPORT
 
 #include "Bank.h"
+#include<chrono>
+#include<ctime>
 #include <fstream>
 
 class Report{
