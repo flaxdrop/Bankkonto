@@ -2,11 +2,11 @@
 #include <sstream>
 
 Client::Client(const std::string &name, Bank &bank_ref, std::vector<std::string>& reports, std::mutex& report_mutex, 
-                std::condition_variable& cv, bool& data_to_report) : name(name), bank(bank_ref)
+                std::condition_variable& cv, std::atomic_bool& data_to_report) : name(name), bank(bank_ref)
 {
 }
 void Client::client(Bank &bank_ref, const std::string &name, std::vector<std::string>& reports, std::mutex& report_mutex, 
-                    std::condition_variable& cv, bool& data_to_report)
+                    std::condition_variable& cv, std::atomic_bool& data_to_report)
 {
     using clock = std::chrono::system_clock;
     Client client(name, bank_ref, reports, report_mutex, cv, data_to_report);
