@@ -35,6 +35,22 @@ int BankAccount::withdraw(int amount)
         return amount;
     } else return -1;
 }
+
+int BankAccount::transfer(int amount, std::shared_ptr<BankAccount> otherAccount)
+{
+    if(amount <= 0)
+    return -1;
+    {
+        //Attempt to withdraw from current account. Return if it fails
+        if(withdraw(amount) == -1)
+        return -1;
+    }
+    //Deposit to the other account
+    otherAccount->deposit(amount);
+    return amount;
+}
+
+
 int BankAccount::getAccountNumber()
 {
     std::shared_lock<std::shared_mutex> lock(m_accountMutex);

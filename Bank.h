@@ -20,6 +20,7 @@ class Bank{
         bool accountExists(int accountNumber);
         void printBalance()const;
         std::shared_ptr<BankAccount> getAccount(int accountNumber);
+        std::shared_ptr<BankAccount> getRandomAccount();
         std::vector<int> getAccountNumbers();
 };
 

@@ -8,36 +8,21 @@ void Client::client(Bank &bank_ref, const std::string &name)
 {
     Client client(name, bank_ref);
     std::ostringstream stream;
-    std::shared_ptr<BankAccount> account_ref;
-    {
-        std::lock_guard<std::mutex> lock(bank_ref.allAccountsMutex);
-        // populate vector with all valid accounts
-        std::vector<int> existingAccounts{bank_ref.getAccountNumbers()};
-        // get size of vector
-        int numOfAccounts{static_cast<int>(existingAccounts.size())};
-        // get random index
-        int randomAccount{Random::get_random(0, numOfAccounts - 1)};
-        int accountNumber = existingAccounts[randomAccount];
-
-        account_ref = bank_ref.getAccount(accountNumber);
-        if (account_ref == nullptr)
-        {
-            stream << "Account does not exist" << std::endl;
-            std::cout << stream.str();
-            return;
-        }
-    }
+    std::shared_ptr<BankAccount> account_ref = bank_ref.getRandomAccount();
     {
         // get random value for client action
-        int randomValue{Random::get_random(0, 2)};
-        if (randomValue == 0)
+        int randomValue{Random::get_random(0, 3)};
+        switch (randomValue)
+        {
+        case 0:
         {
             int randomAmount{Random::get_random(1, 100)};
             account_ref->deposit(randomAmount);
             stream << client.name << "deposited " << randomAmount << " kr into account " << account_ref->getAccountNumber() << "." << std::endl;
             std::cout << stream.str();
+            break;
         }
-        else if (randomValue == 1)
+        case 1:
         {
             int randomAmount{Random::get_random(1, 100)};
             if (account_ref->getBalance() >= randomAmount)
@@ -51,11 +36,33 @@ void Client::client(Bank &bank_ref, const std::string &name)
                 stream << "Insufficient funds" << std::endl;
                 std::cout << stream.str();
             }
+            break;
         }
-        else
+        case 2:
         {
             stream << client.name << "checked balance in account: " << account_ref->getAccountNumber() << ". Balance: " << account_ref->getBalance() << ".\n";
             std::cout << stream.str();
+            break;
+        }
+        case 3:
+        {
+            std::shared_ptr<BankAccount> otherAccount = bank_ref.getRandomAccount();
+            int randomAmount{Random::get_random(1, 100)};
+
+            if (account_ref->transfer(randomAmount, otherAccount) != -1)
+            {
+                stream << client.name << "transfered " << randomAmount << " kr from account " << account_ref->getAccountNumber() << " to account " << otherAccount->getAccountNumber() << ".\n";
+                std::cout << stream.str();
+            }
+            else
+            {
+                stream << client.name << ": transfer failed.\n";
+                std::cout << stream.str();
+            }
+            break;
+        }
+        default:
+            break;
         }
     }
 
