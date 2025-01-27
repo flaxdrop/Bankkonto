@@ -22,7 +22,6 @@ class Client {
  private:
  std::string name;
  Bank& bank;
- static std::string getCurrentTimeAndNewline();
 
 };
 

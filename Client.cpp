@@ -90,16 +90,6 @@ void Client::client(Bank &bank_ref, const std::string &name, std::vector<std::st
 }
 
 
-std::string Client::getCurrentTimeAndNewline(){
-    using clock = std::chrono::system_clock;
-    time_t now = clock::to_time_t(clock::now());
-    char buffer[50];
-    // OBS! ctime_r lägger till en newline. GRR!
-    // Jag vet hur man fixar med std::strftime men osäker på om den är trådsäker
-    ctime_r(&now, buffer);      
-    return buffer;
-}
-
 std::string getCurrentTime(){
     std::lock_guard<std::mutex> time_mtx(ctime_mutex);
     std::time_t t = std::time(nullptr);
