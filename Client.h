@@ -10,6 +10,9 @@
 #include <ctime>
 #include <cstring>
 
+inline std::mutex ctime_mutex;
+std::string getCurrentTime();
+
 class Client {
     public:
     Client(const std::string& name, Bank& bank_ref, std::vector<std::string>& reports, std::mutex& report_mutex, 
