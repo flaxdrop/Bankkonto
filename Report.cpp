@@ -1,4 +1,5 @@
 #include "Report.h"
+#include <sstream>
 Report::Report(std::vector<std::string>& reports, std::mutex& report_mutex, 
            std::condition_variable& cv, std::atomic_bool &reports_left_to_do, const std::string& filename){}
 
@@ -21,8 +22,6 @@ void Report::report(std::vector<std::string>& reports, std::mutex& report_mutex,
         reports.clear();
         report_lock.unlock();
     }
-    
-    
 
 }
 

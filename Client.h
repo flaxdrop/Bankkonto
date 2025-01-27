@@ -7,6 +7,7 @@
 #include <mutex>
 #include <random>
 #include <chrono>
+#include <atomic>
 #include <ctime>
 #include <cstring>
 

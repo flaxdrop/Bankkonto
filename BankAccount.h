@@ -19,7 +19,9 @@ public:
     int getBalance() const;
     int deposit(int amount);
     int withdraw(int amount);
+    int transfer(int amount,std::shared_ptr<BankAccount> otherAccount);
     int getAccountNumber();
+    
 };
 
 #endif

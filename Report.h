@@ -5,6 +5,7 @@
 #include<chrono>
 #include<ctime>
 #include <fstream>
+#include <atomic>
 
 class Report{
     public:

@@ -1,5 +1,6 @@
 #include "Bank.h"
 #include <iostream>
+#include <sstream>
 
 
 void Bank::createAccount(int accountNumber, int balance)
@@ -54,6 +55,31 @@ std::shared_ptr<BankAccount> Bank::getAccount(int accountNumber)
         return search->second;  
     } 
     return nullptr;  
+}
+
+std::shared_ptr<BankAccount> Bank::getRandomAccount()
+{
+    std::ostringstream stream;
+    std::shared_ptr<BankAccount> account_ref;
+    {
+        std::lock_guard<std::mutex> lock(allAccountsMutex);
+        // populate vector with all valid accounts
+        std::vector<int> existingAccounts{getAccountNumbers()};
+        // get size of vector
+        int numOfAccounts{static_cast<int>(existingAccounts.size())};
+        // get random index
+        int randomAccount{Random::get_random(0, numOfAccounts - 1)};
+        int accountNumber = existingAccounts[randomAccount];
+
+        account_ref = getAccount(accountNumber);
+        if (account_ref == nullptr)
+        {
+            stream << "Account does not exist" << std::endl;
+            std::cout << stream.str();
+            return nullptr;
+        }
+    }
+    return account_ref;
 }
 
 std::vector<int> Bank::getAccountNumbers()
