@@ -69,7 +69,7 @@ void Client::client(Bank &bank_ref, const std::string &name, std::vector<std::st
         else
         {
             stream << client.name << "checked balance in account: " << account_ref->getAccountNumber() << ". Balance: " << account_ref->getBalance() 
-                   << clock::to_time_t(clock::now()) << std::endl;
+                   << ", " << clock::to_time_t(clock::now()) << std::endl;
             std::lock_guard<std::mutex> report_lock(report_mutex);
             reports.emplace_back(stream.str());
             data_to_report = true;

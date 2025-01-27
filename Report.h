@@ -2,6 +2,7 @@
 #define CHAS_BOILER1_BANKSYSTEM_CLIENT
 
 #include "Bank.h"
+#include <fstream>
 
 class Report{
     public:
