@@ -1,12 +1,12 @@
 #include "Client.h"
 #include <sstream>
 
-Client::Client(const std::string &name, Bank &bank_ref, std::vector<std::string> &reports, std::mutex &report_mutex,
-               std::condition_variable &cv, bool &data_to_report) : name(name), bank(bank_ref)
+Client::Client(const std::string &name, Bank &bank_ref, std::vector<std::string>& reports, std::mutex& report_mutex, 
+                std::condition_variable& cv, std::atomic_bool& data_to_report) : name(name), bank(bank_ref)
 {
 }
-void Client::client(Bank &bank_ref, const std::string &name, std::vector<std::string> &reports, std::mutex &report_mutex,
-                    std::condition_variable &cv, bool &data_to_report)
+void Client::client(Bank &bank_ref, const std::string &name, std::vector<std::string>& reports, std::mutex& report_mutex, 
+                    std::condition_variable& cv, std::atomic_bool& data_to_report)
 {
     using clock = std::chrono::system_clock;
     Client client(name, bank_ref, reports, report_mutex, cv, data_to_report);
@@ -61,8 +61,8 @@ void Client::client(Bank &bank_ref, const std::string &name, std::vector<std::st
         }
         case 2:
         {
-            stream << client.name << "checked balance in account: " << account_ref->getAccountNumber() << ". Balance: " << account_ref->getBalance()
-                   << clock::to_time_t(clock::now()) << std::endl;
+            stream << client.name << "checked balance in account: " << account_ref->getAccountNumber() << ". Balance: " << account_ref->getBalance() 
+                   << ", " << clock::to_time_t(clock::now()) << std::endl;
             std::lock_guard<std::mutex> report_lock(report_mutex);
             reports.emplace_back(stream.str());
             data_to_report = true;
@@ -75,7 +75,8 @@ void Client::client(Bank &bank_ref, const std::string &name, std::vector<std::st
 
             if (account_ref->transfer(randomAmount, otherAccount) != -1)
             {
-                stream << client.name << "transfered " << randomAmount << " kr from account " << account_ref->getAccountNumber() << " to account " << otherAccount->getAccountNumber() << ".\n";
+                stream << client.name << "transfered " << randomAmount << " kr from account " << account_ref->getAccountNumber() 
+                << " to account " << otherAccount->getAccountNumber() << ", " << clock::to_time_t(clock::now()) << ".\n";
                 std::lock_guard<std::mutex> report_lock(report_mutex);
                 reports.emplace_back(stream.str());
             }
