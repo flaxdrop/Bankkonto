@@ -20,10 +20,14 @@ int main()
 
     std::mutex report_mutex;
     std::vector<std::string> reports;
+    std::condition_variable cv;
+    // std::mutex cv_mutex;
+    bool data_to_report { false };
 
     for (const auto& name : clientNames)
     {
-        threads.emplace_back(std::thread(Client::client, std::ref(bank), name, std::ref(reports), std::ref(report_mutex)));
+        threads.emplace_back(std::thread(Client::client, std::ref(bank), name, 
+                             std::ref(reports), std::ref(report_mutex), std::ref(cv), std::ref(data_to_report)));
     }
 
     for (auto& thread : threads)
