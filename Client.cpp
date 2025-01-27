@@ -1,24 +1,27 @@
 #include "Client.h"
 #include <sstream>
 
-Client::Client(const std::string &name, Bank &bank_ref, std::vector<std::string>& reports, std::mutex& report_mutex, 
-                std::condition_variable& cv, std::atomic_bool& data_to_report) : name(name), bank(bank_ref)
+Client::Client(const std::string &name, Bank &bank_ref, std::vector<std::string> &reports, std::mutex &report_mutex,
+               std::condition_variable &cv) : name(name), bank(bank_ref)
 {
 }
-void Client::client(Bank &bank_ref, const std::string &name, std::vector<std::string>& reports, std::mutex& report_mutex, 
-                    std::condition_variable& cv, std::atomic_bool& data_to_report)
+void Client::client(Bank &bank_ref, const std::string &name, std::vector<std::string> &reports, std::mutex &report_mutex,
+                    std::condition_variable &cv)
 {
     using clock = std::chrono::system_clock;
-    Client client(name, bank_ref, reports, report_mutex, cv, data_to_report);
+    Client client(name, bank_ref, reports, report_mutex, cv);
     std::ostringstream stream;
     std::shared_ptr<BankAccount> account_ref = bank_ref.getRandomAccount();
 
     if (account_ref == nullptr)
     {
-        stream << "Transaction attempt " << clock::to_time_t(clock::now()) << " Account does not exist" << std::endl;
-        std::lock_guard<std::mutex> report_lock(report_mutex);
-        reports.emplace_back(stream.str());
-        data_to_report = true;
+
+        stream << " Account does not exist. Transaction attempt " << getCurrentTime() << "\n";
+        {
+            std::lock_guard<std::mutex> report_lock(report_mutex);
+            reports.emplace_back(stream.str());
+        }
+        cv.notify_one();
         return;
     }
     {
@@ -31,11 +34,12 @@ void Client::client(Bank &bank_ref, const std::string &name, std::vector<std::st
             int randomAmount{Random::get_random(1, 100)};
             account_ref->deposit(randomAmount);
             stream << client.name << "deposited " << randomAmount << " kr into account " << account_ref->getAccountNumber()
-                   << ", " << clock::to_time_t(clock::now()) << std::endl;
-            std::lock_guard<std::mutex> report_lock(report_mutex);
-            reports.emplace_back(stream.str());
-            data_to_report = true;
-            // Printing is now handled by Report thread
+                   << ", " << getCurrentTime() << "\n";
+            {
+                std::lock_guard<std::mutex> report_lock(report_mutex);
+                reports.emplace_back(stream.str());
+            }
+            cv.notify_one();
             break;
         }
         case 1:
@@ -45,27 +49,33 @@ void Client::client(Bank &bank_ref, const std::string &name, std::vector<std::st
             {
                 account_ref->withdraw(randomAmount);
                 stream << client.name << "withdrew " << randomAmount << " kr from account " << account_ref->getAccountNumber()
-                       << ", " << clock::to_time_t(clock::now()) << std::endl;
-                std::lock_guard<std::mutex> report_lock(report_mutex);
-                reports.emplace_back(stream.str());
-                data_to_report = true;
+                       << ", " << getCurrentTime() << "\n";
+                {
+                    std::lock_guard<std::mutex> report_lock(report_mutex);
+                    reports.emplace_back(stream.str());
+                }
+                cv.notify_one();
             }
             else
             {
-                stream << "Transaction attempt " << clock::to_time_t(clock::now()) << "Insufficient funds" << std::endl;
-                std::lock_guard<std::mutex> report_lock(report_mutex);
-                reports.emplace_back(stream.str());
-                data_to_report = true;
+                stream << "Insufficient funds. Transaction attempt " << getCurrentTime() << "\n";
+                {
+                    std::lock_guard<std::mutex> report_lock(report_mutex);
+                    reports.emplace_back(stream.str());
+                }
+                cv.notify_one();
             }
             break;
         }
         case 2:
         {
-            stream << client.name << "checked balance in account: " << account_ref->getAccountNumber() << ". Balance: " << account_ref->getBalance() 
-                   << ", " << clock::to_time_t(clock::now()) << std::endl;
-            std::lock_guard<std::mutex> report_lock(report_mutex);
-            reports.emplace_back(stream.str());
-            data_to_report = true;
+            stream << client.name << "checked balance in account: " << account_ref->getAccountNumber() << ". Balance: " << account_ref->getBalance()
+                   << ", " << getCurrentTime() << "\n";
+            {
+                std::lock_guard<std::mutex> report_lock(report_mutex);
+                reports.emplace_back(stream.str());
+            }
+            cv.notify_one();
             break;
         }
         case 3:
@@ -75,8 +85,8 @@ void Client::client(Bank &bank_ref, const std::string &name, std::vector<std::st
 
             if (account_ref->transfer(randomAmount, otherAccount) != -1)
             {
-                stream << client.name << "transfered " << randomAmount << " kr from account " << account_ref->getAccountNumber() 
-                << " to account " << otherAccount->getAccountNumber() << ", " << clock::to_time_t(clock::now()) << ".\n";
+                stream << client.name << "transfered " << randomAmount << " kr from account " << account_ref->getAccountNumber()
+                       << " to account " << otherAccount->getAccountNumber() << ", " << getCurrentTime() << ".\n";
                 std::lock_guard<std::mutex> report_lock(report_mutex);
                 reports.emplace_back(stream.str());
             }
@@ -91,7 +101,20 @@ void Client::client(Bank &bank_ref, const std::string &name, std::vector<std::st
         default:
             break;
         }
-    }
 
-    return;
+        return;
+    }
+}
+
+std::string getCurrentTime()
+{
+    std::lock_guard<std::mutex> time_mtx(ctime_mutex);
+    std::time_t t = std::time(nullptr);
+    char time_string[100];
+    if (std::strftime(time_string, sizeof(time_string), "%c", std::localtime(&t)))
+    {
+        return time_string;
+    }
+    else
+        return "date_error";
 }
