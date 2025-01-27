@@ -17,9 +17,13 @@ int main()
     
     std::vector<std::thread> threads;
     std::vector<std::string> clientNames = {"Alice ", "Bob ", "Charlie ", "David ", "Eve ", "Frank ", "Grace ", "Heidi ", "Ivan ", "Judy ", "john "};
+
+    std::mutex report_mutex;
+    std::vector<std::string> reports;
+
     for (const auto& name : clientNames)
     {
-        threads.emplace_back(std::thread(Client::client, std::ref(bank), name));
+        threads.emplace_back(std::thread(Client::client, std::ref(bank), name, std::ref(reports), std::ref(report_mutex)));
     }
 
     for (auto& thread : threads)
