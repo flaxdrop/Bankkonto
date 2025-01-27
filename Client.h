@@ -7,16 +7,20 @@
 #include <mutex>
 #include <random>
 #include <chrono>
+#include <ctime>
+#include <cstring>
 
 class Client {
     public:
     Client(const std::string& name, Bank& bank_ref, std::vector<std::string>& reports, std::mutex& report_mutex, 
-    std::condition_variable& cv, std::atomic_bool& data_to_report);
+    std::condition_variable& cv);
  static void client(Bank& bank_ref, const std::string& name, std::vector<std::string>& reports, std::mutex& report_mutex, 
-                    std::condition_variable& cv, std::atomic_bool& data_to_report);
+                    std::condition_variable& cv);
  private:
  std::string name;
  Bank& bank;
+ static std::string getCurrentTimeAndNewline();
+
 };
 
 
