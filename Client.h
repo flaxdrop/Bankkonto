@@ -10,21 +10,18 @@
 #include <atomic>
 #include <ctime>
 #include <cstring>
+#include <condition_variable>
 
 inline std::mutex ctime_mutex;
-std::string getCurrentTime();
+std::string get_current_time();
 
-class Client {
-    public:
-    Client(const std::string& name, Bank& bank_ref, std::vector<std::string>& reports, std::mutex& report_mutex, 
-    std::condition_variable& cv);
- static void client(Bank& bank_ref, const std::string& name, std::vector<std::string>& reports, std::mutex& report_mutex, 
-                    std::condition_variable& cv);
- private:
- std::string name;
- Bank& bank;
-
+namespace Client
+{
+    void simulated_client(Bank &bank_ref, 
+                          const std::string &client_name, 
+                          std::vector<std::string> &reports, 
+                          std::mutex &report_mutex,
+                          std::condition_variable &report_available);
 };
-
 
 #endif

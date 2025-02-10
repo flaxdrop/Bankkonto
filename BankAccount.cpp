@@ -1,9 +1,11 @@
 #include "BankAccount.h"
 
+//! @brief List constructor for bank accounts
 BankAccount::BankAccount(int accountnumber, int balance)
     : m_accountNumber ( accountnumber ), m_balance ( balance ) {}
 
-int BankAccount::getBalance() const
+
+const int BankAccount::getBalance() const
 {
     std::shared_lock<std::shared_mutex> lock(m_accountMutex);
 
@@ -12,19 +14,30 @@ int BankAccount::getBalance() const
     return m_balance;
 }
 
-int BankAccount::deposit(int amount)
+
+//! Throws invalid_argument if amount is 0 or less.
+//!
+void BankAccount::deposit( int amount )
 {
     std::lock_guard<std::shared_mutex> lock(m_accountMutex);
     
-    if (amount > 0) {                   
+    if (amount > 0) 
+    {                   
         int randomValue{Random::get_random(100, 1000)};
         std::this_thread::sleep_for(std::chrono::milliseconds(randomValue));
         m_balance += amount;
-        return amount;
-    } else return -1;
+    } 
+    else
+    {
+        throw std::invalid_argument("Amount to deposit can't be less than 0");
+    }
 }
 
-int BankAccount::withdraw(int amount)
+
+//! Throws invalid_argument if amount is 0 or less,
+//! and runtime_error if the account doesn't have enough money. 
+//!
+void BankAccount::withdraw(int amount)
 {
     std::lock_guard<std::shared_mutex> lock(m_accountMutex);
     
@@ -32,26 +45,61 @@ int BankAccount::withdraw(int amount)
         int randomValue{Random::get_random(100, 1000)};
         std::this_thread::sleep_for(std::chrono::milliseconds(randomValue));
         m_balance -= amount;
-        return amount;
-    } else return -1;
+    }
+    else
+    {
+        if ( amount <= 0 )
+        {
+            throw std::invalid_argument(
+                "Amount to withdraw must be greater than 0"
+            );
+        } 
+        else if ( m_balance - amount < 0 ) 
+        {
+            throw std::runtime_error(
+                "Not enough money on account"
+            );
+        }
+    }
 }
 
-int BankAccount::transfer(int amount, std::shared_ptr<BankAccount> otherAccount)
+
+//! Throws invalid_argument if amount is 0 or less,
+//! runtime_error if the pointer can't be dereferenced,
+//! and runtime_error if the account doesn't have enough money. 
+//!
+void BankAccount::transfer(int amount, std::shared_ptr<BankAccount> otherAccount)
 {
-    if(amount <= 0)
-    return -1;
+    if( amount <= 0 ) 
     {
-        //Attempt to withdraw from current account. Return if it fails
-        if(withdraw(amount) == -1)
-        return -1;
+        throw std::invalid_argument("Amount to transfer must be 1 or more.");
+    };
+    if( !otherAccount ) 
+    {
+        throw std::runtime_error("Failed to dereference pointer to other account.");
+    };
+    //Attempt to withdraw from current account. Return if it fails
+    try
+    {
+        withdraw(amount);
+    }
+    catch (std::invalid_argument e)
+    {
+        throw e;
     }
     //Deposit to the other account
-    otherAccount->deposit(amount);
-    return amount;
+    try
+    {
+        otherAccount->deposit(amount);
+    }
+    catch ( std::invalid_argument e )
+    {
+        throw e;
+    }
 }
 
 
-int BankAccount::getAccountNumber()
+const int BankAccount::getAccountNumber() const
 {
     std::shared_lock<std::shared_mutex> lock(m_accountMutex);
     
@@ -59,3 +107,4 @@ int BankAccount::getAccountNumber()
     std::this_thread::sleep_for(std::chrono::milliseconds(randomValue));
     return m_accountNumber;
 }
+

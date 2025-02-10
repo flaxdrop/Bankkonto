@@ -5,23 +5,24 @@
 #include <shared_mutex>
 #include <thread>
 #include <chrono>
+#include <stdexcept>
 #include "Random.h"
 
-// deposit and withdraw returns amount on success, -1 on failure
+//! @brief Class for bank accounts
+//! 
 class BankAccount
 {
 private:
-    int m_balance;
+    int m_balance = 0;
     int m_accountNumber;
     mutable std::shared_mutex m_accountMutex;
 public:
-    BankAccount(int accountnumber, int balance = 0);
-    int getBalance() const;
-    int deposit(int amount);
-    int withdraw(int amount);
-    int transfer(int amount,std::shared_ptr<BankAccount> otherAccount);
-    int getAccountNumber();
-    
+    BankAccount(int accountnumber, int balance);
+    const int getBalance() const;
+    void deposit(int amount);
+    void withdraw(int amount);
+    void transfer(int amount,std::shared_ptr<BankAccount> otherAccount);
+    const int getAccountNumber() const;
 };
 
 #endif
