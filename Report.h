@@ -7,6 +7,10 @@
 #include <fstream>
 #include <atomic>
 
+
+//! @brief Class for logging reports
+//! 
+
 class Report{
     public:
     Report(std::vector<std::string>& reports, std::mutex& report_mutex, 
