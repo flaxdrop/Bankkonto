@@ -25,7 +25,7 @@ Navigera till projektmappen:
 `cd [projektmapp]`
 
 Kompilera koden (t.ex. med g++):  
-`g++ -std=c++20 -pthread Client.cpp Bank.cpp BankAccount.cpp main.cpp -o bank_system`
+`g++ -std=c++20 -pthread Client.cpp Bank.cpp BankAccount.cpp Report.cpp main.cpp -o bank_system`
 
 ### Användning
 
@@ -40,6 +40,7 @@ Programmet simulerar flera kunder som gör transaktioner och visar resultaten i 
 - _BankAccount.h_ och _BankAccount.cpp_ - Klasser för att hantera bankkonton.
 - _Client.h_ och _Client.cpp_ - Klasser för att representera kunder och deras handlingar.
 - _Bank.h_ och _Bank.cpp_ - Hanterar transaktioner och synkronisering.
+- _Report.h_ och _Report.cpp_ - Skriver ut en loggfil innan programmet avslutas
 
 ### Förbättringar och Vidareutveckling
 
