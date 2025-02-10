@@ -29,7 +29,6 @@ void Bank::deleteAccount(int accountNumber)
         std::cout << "Error: account " << accountNumber << " is not empty\n";
         return;
     }
-    // add user prompt? Delete account #accountNumber, Are you sure (Y/n)
     m_accounts.erase(accountNumber);
     std::cout << "Account " << accountNumber << " deleted\n";
 }
