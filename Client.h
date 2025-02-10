@@ -16,7 +16,7 @@ std::string getCurrentTime();
 
 namespace Client {
     
-    static void client(Bank& bank_ref, const std::string& name, std::vector<std::string>& reports, std::mutex& report_mutex, 
+    void client(Bank& bank_ref, const std::string& name, std::vector<std::string>& reports, std::mutex& report_mutex, 
                 std::condition_variable& cv);
 };
 

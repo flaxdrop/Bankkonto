@@ -3,6 +3,14 @@
 Report::Report(std::vector<std::string>& reports, std::mutex& report_mutex, 
            std::condition_variable& cv, std::atomic_bool &reports_left_to_do, const std::string& filename){}
 
+
+//! @brief Worker thread for logging reports to file and stdout
+//! Loops while main thread says there's reports left to do and waits on a
+//! condition variable signal that there's avaiable work.
+//! When work is performed, loops though available reports
+//! and prints to file and stdout.
+//! Then the vector containing ingoing reports are cleared.
+
 void Report::report(std::vector<std::string>& reports, std::mutex& report_mutex, 
                     std::condition_variable& cv, std::atomic_bool &reports_left_to_do, const std::string& filename)                    
 {
