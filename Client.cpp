@@ -65,7 +65,6 @@ void Client::simulated_client(Bank &bank_ref, const std::string &client_name,
             int random_amount{Random::get_random(1, 100)};
             try
             {
-                account_ref->getBalance() >= random_amount;
                 account_ref->withdraw(random_amount);
             }
             catch (std::exception e)
