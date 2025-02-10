@@ -33,7 +33,7 @@ int main()
 
     for (const auto& name : clientNames)
     {
-        threads.emplace_back(std::thread(Client::client, std::ref(bank), name, 
+        threads.emplace_back(std::thread(Client::simulated_client, std::ref(bank), name, 
                              std::ref(reports), std::ref(reportMutex), std::ref(reportAvailable)));
     }
 
