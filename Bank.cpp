@@ -7,7 +7,7 @@ void Bank::createAccount(int accountNumber, int balance)
     std::lock_guard<std::mutex> lock(allAccountsMutex);
     if (m_accounts.count(accountNumber) != 0)
     {
-        // error message: account already exists
+        std::cout << "Error: account does not exist\n";
         return;
     }
     m_accounts.emplace(accountNumber, std::make_shared<BankAccount>(accountNumber, balance));
