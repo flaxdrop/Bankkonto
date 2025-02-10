@@ -3,6 +3,7 @@
 BankAccount::BankAccount(int accountnumber, int balance)
     : m_accountNumber ( accountnumber ), m_balance ( balance ) {}
 
+
 int BankAccount::getBalance() const
 {
     std::shared_lock<std::shared_mutex> lock(m_accountMutex);
@@ -12,17 +13,23 @@ int BankAccount::getBalance() const
     return m_balance;
 }
 
-int BankAccount::deposit(int amount)
+
+void BankAccount::deposit( int amount )
 {
     std::lock_guard<std::shared_mutex> lock(m_accountMutex);
     
-    if (amount > 0) {                   
+    if (amount > 0) 
+    {                   
         int randomValue{Random::get_random(100, 1000)};
         std::this_thread::sleep_for(std::chrono::milliseconds(randomValue));
         m_balance += amount;
-        return amount;
-    } else return -1;
+    } 
+    else
+    {
+        throw std::invalid_argument("Amount to deposit can't be less than 0");
+    }
 }
+
 
 int BankAccount::withdraw(int amount)
 {
@@ -35,6 +42,7 @@ int BankAccount::withdraw(int amount)
         return amount;
     } else return -1;
 }
+
 
 int BankAccount::transfer(int amount, std::shared_ptr<BankAccount> otherAccount)
 {
@@ -59,3 +67,4 @@ int BankAccount::getAccountNumber()
     std::this_thread::sleep_for(std::chrono::milliseconds(randomValue));
     return m_accountNumber;
 }
+
