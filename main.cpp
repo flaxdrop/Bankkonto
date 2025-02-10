@@ -19,22 +19,22 @@ int main()
     
     std::vector<std::thread> threads;
     std::vector<std::string> clientNames = {"Alice ", "Bob ", "Charlie ", "David ", "Eve ", "Frank ", "Grace ", "Heidi ", "Ivan ", "Judy ", "John "};
-    std::string filename { generate_filename() };
+    std::string reportsFileName { generate_filename() };
 
     std::vector<std::string> reports;
-    std::mutex report_mutex;
-    std::condition_variable cv;
-    std::atomic_bool reports_left_to_do { true };
+    std::mutex reportMutex;
+    std::condition_variable reportAvailable;
+    std::atomic_bool reportsLeftToDo { true };
 
     // Create threads
-    std::thread reportthread(Report::report, std::ref(reports), std::ref(report_mutex), std::ref(cv), 
-                             std::ref(reports_left_to_do), std::ref(filename));
+    std::thread reportThread(Report::report, std::ref(reports), std::ref(reportMutex), std::ref(reportAvailable), 
+                             std::ref(reportsLeftToDo), std::ref(reportsFileName));
     std::this_thread::sleep_for(std::chrono::milliseconds(100));
 
     for (const auto& name : clientNames)
     {
         threads.emplace_back(std::thread(Client::client, std::ref(bank), name, 
-                             std::ref(reports), std::ref(report_mutex), std::ref(cv)));
+                             std::ref(reports), std::ref(reportMutex), std::ref(reportAvailable)));
     }
 
 
@@ -43,22 +43,22 @@ int main()
         thread.join();
     }
 
-    // Possible data race now that Report is running?
     std::vector<int> accountNumbers = bank.getAccountNumbers();
-    std::ostringstream balance_stream;
-    balance_stream << "\nAccount balances: \n";
+    std::ostringstream balanceStream;
+    balanceStream << "\nAccount balances: \n";
     for(int i = 0; i < accountNumbers.size(); i++)
     {
-        balance_stream << "Account " << accountNumbers.at(i) << " : "<< bank.getAccount(accountNumbers.at(i))->getBalance() << " kr. \n";
+        balanceStream << "Account " << accountNumbers.at(i) << " : " 
+        << bank.getAccount(accountNumbers.at(i))->getBalance() << " kr. \n";
     }
     {
-        std::lock_guard<std::mutex> rep(report_mutex);
-        reports.emplace_back(balance_stream.str());
+        std::lock_guard<std::mutex> rep(reportMutex);
+        reports.emplace_back(balanceStream.str());
     }
-    cv.notify_one();
+    reportAvailable.notify_one();
 
-    reports_left_to_do = false;
-    reportthread.join();
+    reportsLeftToDo = false;
+    reportThread.join();
 
     return 0;
 }
