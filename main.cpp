@@ -27,7 +27,7 @@ int main()
     std::atomic_bool reportsLeftToDo { true };
 
     // Create threads
-    std::thread reportthread(Report::report, std::ref(reports), std::ref(reportMutex), std::ref(reportAvailable), 
+    std::thread reportThread(Report::report, std::ref(reports), std::ref(reportMutex), std::ref(reportAvailable), 
                              std::ref(reportsLeftToDo), std::ref(reportsFileName));
     std::this_thread::sleep_for(std::chrono::milliseconds(100));
 
@@ -58,7 +58,7 @@ int main()
     reportAvailable.notify_one();
 
     reportsLeftToDo = false;
-    reportthread.join();
+    reportThread.join();
 
     return 0;
 }
